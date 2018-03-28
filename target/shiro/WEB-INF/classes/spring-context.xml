@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+    <!--加载 properties 配置文件-->
+    <context:property-placeholder location="classpath:/config/db.properties"/>
+    <!--根本原因：由子容器扫描装配了@Service 注解的实例。
+      spring的context是父子容器，由ServletContextListener
+      加载spring配置文件产生的是父容器，springMVC加载配置文件产生的是子容器，
+      子容器对Controller进行扫描装配时装配了@Service注解的实例
+      (@Controller 实例依赖@Service实例)，
+      而该实例理应由父容器进行初始化以保证事务的增强处理，
+      所以此时得到的将是原样的Service（没有经过事务加强处理，故而没有事务处理能力)
+      -->
+    <context:component-scan base-package="com.werner.ping"/>
+</beans>

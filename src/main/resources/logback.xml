@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration debug="false" scan="true" scanPeriod="60 seconds">
+    <contextName>logback</contextName>
+    <property name="log.path" value="F:\\logback.log"/>
+
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- <filter class="com.example.logback.filter.MyFilter" /> -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoding>UTF-8</encoding>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+
+    <appender name="mmall" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:\tocmat\tomcat\apache-tomcat-8.0.46-windows-x64\apache-tomcat-8.0.46\logs\mmall.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:\tocmat\tomcat\apache-tomcat-8.0.46-windows-x64\apache-tomcat-8.0.46\logs\mmall.log.%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <append>true</append>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date %level [%thread] %logger{36} [%file : %line] %msg%n
+            </pattern>
+        </encoder>
+    </appender>
+    <appender name="error" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>D:\tocmat\tomcat\apache-tomcat-8.0.46-windows-x64\apache-tomcat-8.0.46\logs\error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>D:\tocmat\tomcat\apache-tomcat-8.0.46-windows-x64\apache-tomcat-8.0.46\logs\error.log.%d{yyyy-MM-dd}.zip</fileNamePattern>
+            <append>true</append>
+            <maxHistory>10</maxHistory>
+        </rollingPolicy>
+
+        <encoder>
+            <pattern>%date %level [%thread] %logger{36} [%file : %line] %msg%n
+            </pattern>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+    <logger name="com.werner.ping" additivity="false" level="">
+        <appender-ref ref="console"/>
+        <appender-ref ref="mmall"/>
+    </logger>
+
+    <logger name="com.werner.ping.mapper" level="DEBUG"/>
+    <root level="debug">
+        <appender-ref ref="console"/>
+        <appender-ref ref="error"/>
+    </root>
+
+</configuration>

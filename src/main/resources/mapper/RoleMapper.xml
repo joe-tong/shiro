@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.werner.ping.mapper.RoleMapper">
+    <resultMap id="BaseResultMap" type="com.werner.ping.bean.Role">
+        <id column="roleid" property="roleid" jdbcType="INTEGER"/>
+        <result column="role_cn" property="roleCn" jdbcType="VARCHAR"/>
+        <result column="role_en" property="roleEn" jdbcType="VARCHAR"/>
+        <result column="role_desc" property="roleDesc" jdbcType="VARCHAR"/>
+        <result column="role_status" property="roleStatus" jdbcType="VARCHAR"/>
+        <collection property="privilegeList" column="roleid"
+                    select="com.werner.ping.mapper.PrivilegeMapper.selectByRoleId" ofType="privilege"
+                    javaType="java.util.ArrayList"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+    roleid, role_cn, role_en, role_desc, role_status
+  </sql>
+
+    <select id="selectByRoleId" resultMap="BaseResultMap" parameterType="integer">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from role
+        WHERE roleid = #{roleId}
+    </select>
+    <select id="selectRoleAll" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        from role
+        WHERE  roleid &lt;&gt;1
+    </select>
+</mapper>

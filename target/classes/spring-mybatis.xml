@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+
+    <!-- 整合Sql会话工厂归spring管理 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!--读取resouce下的mapper文件-->
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <!-- 指定mybatis核心配置文件 -->
+        <property name="configLocation" value="classpath:config/sqlmap.xml"/>
+        <!-- 指定会话工厂使用的数据源 -->
+        <property name="dataSource" ref="dataSource"/>
+        <!--分页插件-->
+        <property name="plugins">
+            <array>
+                <bean class="com.github.pagehelper.PageHelper">
+                    <property name="properties">
+                        <value>
+                            dialect = mysql
+                        </value>
+                    </property>
+                </bean>
+            </array>
+        </property>
+    </bean>
+    <!--扫描mapper层的接口-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定要扫描的包的全路径名称,如果有多个包用英文状态下的逗号分隔,查询mapper文件-->
+        <property name="basePackage" value="com.werner.ping.mapper"/>
+    </bean>
+
+</beans>

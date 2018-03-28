@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.werner.ping.mapper.PrivilegeMapper">
+    <resultMap id="BaseResultMap" type="com.werner.ping.bean.Privilege">
+        <id column="priid" property="priid" jdbcType="INTEGER"/>
+        <result column="pri_name" property="priName" jdbcType="VARCHAR"/>
+        <result column="pri_url" property="priUrl" jdbcType="VARCHAR"/>
+        <result column="pri_image" property="priImage" jdbcType="VARCHAR"/>
+        <result column="parentid" property="parentid" jdbcType="INTEGER"/>
+        <result column="pri_status" property="priStatus" jdbcType="VARCHAR"/>
+        <result column="pri_desc" property="priDesc" jdbcType="VARCHAR"/>
+    </resultMap>
+    <!--根据RoleId,查询角色对应的权限-->
+    <select id="selectByRoleId" parameterType="integer" resultType="com.werner.ping.bean.Privilege">
+        SELECT pri_name as priName, pri_url as priUrl, pri_image as priImage, parentid, pri_status as priStatus, pri_desc as priDesc,r.priid
+        from priviliage r,pri_role_relax p
+        where r.priid = p.priid
+        AND p.roleid = #{roleId}
+    </select>
+    <!--查询所有的权限信息-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT
+        pri_name, pri_url, pri_image, parentid, pri_status, pri_desc,priid
+        FROM priviliage
+    </select>
+    <!--查询所有的url-->
+    <select id="selectAllUrl" resultType="string">
+        SELECT
+        pri_url
+        FROM priviliage
+        WHERE pri_url is not NULL
+    </select>
+    <!--根据账号名来获取该账号所拥有的权限-->
+    <select id="selectPriByLoginname" resultMap="BaseResultMap" parameterType="string">
+        SELECT  pri_name, pri_url, pri_image, parentid, pri_status, pri_desc,p.priid
+        FROM priviliage p,pri_role_relax x,Users u
+        WHERE p.priid = x.priid and u.roleid = x.roleid and u.loginname = #{loginname}
+    </select>
+</mapper>
